@@ -1,0 +1,13 @@
+{
+  "name": "electron-react-boilerplate",
+  "description": "",
+  "keywords": [],
+  "version": "0.0.0",
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "rebuild": "npx ts-node ../../.erb/scripts/electron-rebuild.js",
+    "link-modules": "npx ts-node ../../.erb/scripts/link-modules.ts",
+    "postinstall": "npm run rebuild && npm run link-modules"
+  },
+  "dependencies": {}
+}

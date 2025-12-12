@@ -1,0 +1,123 @@
+# ======================
+# Node dependencies
+# ======================
+node_modules/
+release/app/node_modules/
+
+# ======================
+# Electron Builder / output
+# ======================
+release/build/
+release/*.exe
+release/*.msi
+release/*.dmg
+release/*.zip
+release/*.AppImage
+release/*.deb
+dist/
+*.map
+
+# ======================
+# Webpack / DLL / temp
+# ======================
+.erb/dll/
+.erb/**/*.bundle.*.js
+.erb/**/*.hot-update.js
+.webpack/
+.cache/
+.tmp/
+
+# ======================
+# Logs
+# ======================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# ======================
+# TypeScript
+# ======================
+*.tsbuildinfo
+
+# ======================
+# Electronmon / dev
+# ======================
+electronmon.log
+*.moncache
+
+# ======================
+# OS files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# IDE / editor files
+# ======================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.log
+
+# ======================
+# Misc
+# ======================
+.env
+
+# ======================
+# Text files
+# ======================
+# Normalize line endings for code files
+*.js       text eol=lf
+*.ts       text eol=lf
+*.tsx      text eol=lf
+*.jsx      text eol=lf
+*.json     text eol=lf
+*.css      text eol=lf
+*.scss     text eol=lf
+*.html     text eol=lf
+*.md       text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+
+# ======================
+# Binary files
+# ======================
+# Do not attempt to normalize these files
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.ico      binary
+*.svg      binary
+*.mp4      binary
+*.webm     binary
+*.mp3      binary
+*.m4a      binary
+*.aac      binary
+*.exe      binary
+*.msi      binary
+*.dmg      binary
+*.AppImage binary
+*.deb      binary
+*.zip      binary
+*.gz       binary
+*.tar      binary
+*.7z       binary
+
+# ======================
+# Electron / build outputs
+# ======================
+release/build/*  binary
+release/app/node_modules/*  binary
+
+# ======================
+# Misc
+# ======================
+*.lock     text eol=lf

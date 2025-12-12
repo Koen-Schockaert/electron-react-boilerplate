@@ -1,0 +1,23 @@
+*       text    eol=lf
+*.exe   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.ico   binary
+*.icns  binary
+*.eot   binary
+*.otf   binary
+*.ttf   binary
+*.woff  binary
+*.woff2 binary
+
+# Prevent prerelease version bumps from overwriting dev
+package.json merge=ours
+package-lock.json merge=ours
+
+release/app/package.json merge=ours
+release/app/package-lock.json merge=ours
+
+# CHANGELOG should not overwrite dev's version
+CHANGELOG.md merge=ours
+
