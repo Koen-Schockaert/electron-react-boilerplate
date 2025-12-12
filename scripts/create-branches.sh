@@ -2,9 +2,9 @@
 set -e
 
 #git init
-git add .
-git commit -m "first commit"
-git remote add origin
+#git add .
+#git commit -m "first commit"
+#git remote add origin https://github.com/Koen-Schockaert/electron-react-boilerplate
 
 git branch -M main
 

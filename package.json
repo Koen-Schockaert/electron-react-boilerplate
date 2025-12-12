@@ -213,7 +213,7 @@
   },
   "repository": {
     "type": "git",
-    "repositoryUrl": "https://github.com/Koen-Schockaert/electron-react-template.git",
+    "repositoryUrl": "https://github.com/Koen-Schockaert/electron-react-boilerplate.git",
     "branches": [
       "main",
       "beta",
