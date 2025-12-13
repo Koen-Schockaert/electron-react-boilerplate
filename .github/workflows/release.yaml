@@ -25,6 +25,7 @@ jobs:
           cache: npm
 
       - name: Clean previous build
+        shell: bash
         run: rm -rf release/build/* || true
 
       - name: Install dependencies

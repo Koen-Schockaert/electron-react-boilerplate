@@ -7,7 +7,7 @@ release/app/node_modules/
 # ======================
 # Electron Builder / output
 # ======================
-#release/build/
+release/build/
 release/*.exe
 release/*.msi
 release/*.dmg
