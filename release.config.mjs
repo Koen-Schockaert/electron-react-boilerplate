@@ -23,6 +23,11 @@ export default {
     ["@semantic-release/git", { assets: ["CHANGELOG.md"], message: "chore(release): ${nextRelease.version} [skip ci]" }],
 
     // Create GitHub release with build assets
-    ["@semantic-release/github", { assets: ["release/build/**/*"] }]
+    ["@semantic-release/github", { assets: [
+      "release/build/**/*.exe",
+      "release/build/**/*.dmg",
+      "release/build/**/*.AppImage"
+      ]}
+    ]
   ]
 };

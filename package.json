@@ -138,7 +138,7 @@
     "directories": {
       "app": "release/app",
       "buildResources": "assets",
-      "output": "release/build/${os}"
+      "output": "release/build"
     },
     "extraResources": [
       "./assets/**"
