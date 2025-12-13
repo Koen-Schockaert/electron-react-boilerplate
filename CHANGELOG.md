@@ -1,3 +1,13 @@
+# [1.0.0-alpha.7](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2025-12-13)
+
+
+### Bug Fixes
+
+* aaa ([5c64c23](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/5c64c236da1a70d5153e43f335e2dcb6e2c0403d))
+* kk ([527d129](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/527d129e46b68d01a2fa29b51698d1c0b1725876))
+* tt ([377c958](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/377c95817323b4b276b7f53503a1628def9577b5))
+* ygtdr ([3ac8073](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/3ac80733c9174504ec67fc205736dedc42c03833))
+
 # [1.0.0-alpha.6](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2025-12-13)
 
 
