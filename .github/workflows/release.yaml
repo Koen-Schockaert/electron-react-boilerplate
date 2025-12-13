@@ -57,28 +57,61 @@ jobs:
       contents: write
       packages: write
     steps:
-      # 1️⃣ Checkout repository
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-
-      # 2️⃣ Setup Node
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-
-      # 3️⃣ Install dependencies
       - run: npm ci
 
-      # 4️⃣ Download build artifacts
+      # Download artifacts into release/build
       - uses: actions/download-artifact@v4
         with:
-          path: release/build/
+          path: release/build
 
-      # 5️⃣ Release with semantic-release (Bash used internally by npm)
+      # List files to verify
+      - name: List downloaded files
+        shell: bash
+        run: ls -R release/build
+
+      # Get next release version
+      - name: Get next release version
+        id: next_version
+        shell: bash
+        run: |
+          VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
+          echo "NEXT_VERSION=$VERSION" >> $GITHUB_ENV
+
+      # Rename files to match release version
+      - name: Rename build files to match release version
+        shell: bash
+        run: |
+          cd release/build
+          for file in *; do
+            if [[ -f "$file" ]]; then
+              EXT="${file##*.}"
+              OS=""
+              ARCH=""
+              case "$EXT" in
+                exe) OS="win"; ARCH="x64" ;;
+                dmg) OS="mac"; ARCH="x64" ;;
+                AppImage) OS="linux"; ARCH="x64" ;;
+              esac
+              mv "$file" "ElectronReact-v${{ env.NEXT_VERSION }}-$OS-$ARCH.$EXT"
+            fi
+          done
+
+      # List files after rename
+      - name: Verify renamed files
+        shell: bash
+        run: ls -R release/build
+
+      # Run semantic-release
       - name: Release with semantic-release
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
+
