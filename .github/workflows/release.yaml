@@ -79,6 +79,8 @@ jobs:
       - name: Get next release version
         id: get_version
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           NEXT_VERSION=$(npx semantic-release --dry-run --no-ci | grep "The next release version is" | awk '{print $NF}')
           echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
