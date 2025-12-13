@@ -66,21 +66,32 @@ jobs:
           # Get next release version
           NEXT_VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
           echo "Next release version: $NEXT_VERSION"
-
-          # Linux/macOS: bash
+          
           if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "macOS" ]]; then
-            shopt -s globstar
-            for file in release/build/**/*.{exe,dmg,AppImage}; do
-              if [[ -f "$file" ]]; then
-                DIRNAME=$(dirname "$file")
-                BASENAME=$(basename "$file")
-                EXT="${BASENAME##*.}"
-                OS_ARCH=$(echo "$BASENAME" | sed -E 's/^ElectronReact-0\.0\.0-(.*)\.'$EXT'$/\1/')
-                NEW_NAME="ElectronReact-v${NEXT_VERSION}-${OS_ARCH}.${EXT}"
-                echo "Renaming $file -> $NEW_NAME"
-                mv "$file" "$DIRNAME/$NEW_NAME"
-              fi
-            done
+          # Linux/macOS: bash
+          set -e
+          
+          find release/build -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) | while read -r file; do
+            DIRNAME=$(dirname "$file")
+            BASENAME=$(basename "$file")
+
+            # Extract extension
+            EXT="${BASENAME##*.}"
+
+            # Extract os-arch from ElectronReact-0.0.0-<os>-<arch>.<ext>
+            if [[ "$BASENAME" =~ ^ElectronReact-[0-9]+\.[0-9]+\.[0-9]+-(.+)\.$EXT$ ]]; then
+              OS_ARCH="${BASH_REMATCH[1]}"
+              NEW_NAME="ElectronReact-v${NEXT_VERSION}-${OS_ARCH}.${EXT}"
+
+              echo "Renaming:"
+              echo "  $BASENAME"
+              echo "  → $NEW_NAME"
+
+              mv "$file" "$DIRNAME/$NEW_NAME"
+            else
+              echo "Skipping unrecognized file: $BASENAME"
+            fi
+          done
 
           # Windows: PowerShell
           elif [[ "$RUNNER_OS" == "Windows" ]]; then
