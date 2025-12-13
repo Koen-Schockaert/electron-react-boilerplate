@@ -58,20 +58,44 @@ jobs:
         run: |
           npm run package -- --config.extraMetadata.version=$NEXT_VERSION
 
-      # Rename build files to match release tag
+      # Rename build files to match release tag (cross-platform)
       - name: Rename artifacts
-        shell: bash
         run: |
-          for file in release/build/**/*.{exe,dmg,AppImage}; do
-            if [ -f "$file" ]; then
-              FILENAME=$(basename "$file")
-              DIRNAME=$(dirname "$file")
-              OS=$(echo "$FILENAME" | awk -F- '{print $(NF-1)}')
-              ARCH=$(echo "$FILENAME" | awk -F- '{print $NF}' | sed 's/\.[^.]*$//')
-              EXT="${FILENAME##*.}"
-              mv "$file" "$DIRNAME/ElectronReact-v$NEXT_VERSION-$OS-$ARCH.$EXT"
-            fi
-          done
+          # Get next release version
+          NEXT_VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
+          echo "Next release version: $NEXT_VERSION"
+
+          # Linux/macOS: bash
+          if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "macOS" ]]; then
+            shopt -s globstar
+            for file in release/build/**/*.{exe,dmg,AppImage}; do
+              if [[ -f "$file" ]]; then
+                DIRNAME=$(dirname "$file")
+                BASENAME=$(basename "$file")
+                EXT="${BASENAME##*.}"
+                OS_ARCH=$(echo "$BASENAME" | sed -E 's/^ElectronReact-0\.0\.0-(.*)\.'$EXT'$/\1/')
+                NEW_NAME="ElectronReact-v${NEXT_VERSION}-${OS_ARCH}.${EXT}"
+                echo "Renaming $file -> $NEW_NAME"
+                mv "$file" "$DIRNAME/$NEW_NAME"
+              fi
+            done
+
+          # Windows: PowerShell
+          elif [[ "$RUNNER_OS" == "Windows" ]]; then
+            powershell -Command "
+            Get-ChildItem -Path 'release/build' -Recurse -Include '*.exe','*.dmg','*.AppImage' | ForEach-Object {
+                \$dir = \$_.DirectoryName
+                \$base = \$_.BaseName
+                \$ext = \$_.Extension
+                if (\$base -match '^ElectronReact-0\.0\.0-(.*)') {
+                    \$os_arch = \$matches[1]
+                    \$newName = 'ElectronReact-v$env:NEXT_VERSION-' + \$os_arch + \$ext
+                    Write-Host 'Renaming' \$_.FullName '->' (Join-Path \$dir \$newName)
+                    Rename-Item -Path \$_.FullName -NewName \$newName
+                }
+            }"
+          fi
+        shell: bash
 
       # Upload artifacts
       - uses: actions/upload-artifact@v4
