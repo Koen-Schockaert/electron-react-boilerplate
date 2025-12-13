@@ -1,3 +1,10 @@
+# [1.0.0-alpha.10](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2025-12-13)
+
+
+### Bug Fixes
+
+* final rename? ([49ef268](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/49ef2683b0cc1288cd4a422679fd50a6df8a2280))
+
 # [1.0.0-alpha.9](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2025-12-13)
 
 
