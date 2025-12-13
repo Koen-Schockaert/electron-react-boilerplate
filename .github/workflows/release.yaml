@@ -48,9 +48,15 @@ jobs:
           #echo "Next release version: $NEXT_VERSION"
           #echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
 
-          npx semantic-release --dry-run --no-ci > release.log || true
+          # Run dry-run and save output
+          npx semantic-release --dry-run --no-ci > release.log 2>&1 || true
+
+          # Extract version from log
           NEXT_VERSION=$(grep "The next release version is" release.log | awk '{print $NF}')
           echo "Next release version: $NEXT_VERSION"
+
+          # Export for later steps
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
 
       # Build React app
       - name: Build React app
