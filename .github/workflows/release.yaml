@@ -58,60 +58,47 @@ jobs:
         run: |
           npm run package -- --config.extraMetadata.version=$NEXT_VERSION
 
-      # Rename build files to match release tag (cross-platform)
-      - name: Rename artifacts
+      - name: Compute next release version
+        shell: bash
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get next release version
-          NEXT_VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
-          echo "Next release version: $NEXT_VERSION"
-          
-          # Export so PowerShell can read it
-          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-
-          if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "macOS" ]]; then
-          # Linux/macOS: bash
           set -e
-          
+          NEXT_VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+          echo "Next release version: $NEXT_VERSION"
+
+      - name: Rename artifacts (Linux/macOS)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -e
           find release/build -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) | while read -r file; do
-            DIRNAME=$(dirname "$file")
-            BASENAME=$(basename "$file")
+            dir=$(dirname "$file")
+            base=$(basename "$file")
+            ext="${base##*.}"
 
-            # Extract extension
-            EXT="${BASENAME##*.}"
-
-            # Extract os-arch from ElectronReact-0.0.0-<os>-<arch>.<ext>
-            if [[ "$BASENAME" =~ ^ElectronReact-[0-9]+\.[0-9]+\.[0-9]+-(.+)\.$EXT$ ]]; then
-              OS_ARCH="${BASH_REMATCH[1]}"
-              NEW_NAME="ElectronReact-v${NEXT_VERSION}-${OS_ARCH}.${EXT}"
-
-              echo "Renaming:"
-              echo "  $BASENAME"
-              echo "  → $NEW_NAME"
-
-              mv "$file" "$DIRNAME/$NEW_NAME"
-            else
-              echo "Skipping unrecognized file: $BASENAME"
+            if [[ "$base" =~ ^ElectronReact-[0-9]+\.[0-9]+\.[0-9]+-(.+)\.$ext$ ]]; then
+              os_arch="${BASH_REMATCH[1]}"
+              new="ElectronReact-v${NEXT_VERSION}-${os_arch}.${ext}"
+              echo "Renaming $base → $new"
+              mv "$file" "$dir/$new"
             fi
           done
 
-          # Windows: PowerShell
-          elif [[ "$RUNNER_OS" == "Windows" ]]; then
-            powershell -Command "
-            Get-ChildItem -Path 'release/build' -Recurse -Include '*.exe','*.dmg','*.AppImage' | ForEach-Object {
-                \$dir = \$_.DirectoryName
-                \$base = \$_.BaseName
-                \$ext = \$_.Extension
-                if (\$base -match '^ElectronReact-0\.0\.0-(.*)') {
-                    \$os_arch = \$matches[1]
-                    \$newName = 'ElectronReact-v$env:NEXT_VERSION-' + \$os_arch + \$ext
-                    Write-Host 'Renaming' \$_.FullName '->' (Join-Path \$dir \$newName)
-                    Rename-Item -Path \$_.FullName -NewName \$newName
-                }
-            }"
-          fi
-        shell: bash
+      - name: Rename artifacts (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path release/build -Recurse -Include *.exe,*.dmg,*.AppImage | ForEach-Object {
+            if ($_.Name -match '^ElectronReact-[0-9]+\.[0-9]+\.[0-9]+-(.*)\.(exe|dmg|AppImage)$') {
+              $osArch = $matches[1]
+              $ext = $matches[2]
+              $newName = "ElectronReact-v$env:NEXT_VERSION-$osArch.$ext"
+              Write-Host "Renaming $($_.Name) → $newName"
+              Rename-Item $_.FullName $newName
+            }
+          }
 
       # Upload artifacts
       - uses: actions/upload-artifact@v4

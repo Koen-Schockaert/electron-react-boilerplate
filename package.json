@@ -162,7 +162,7 @@
     "publish": {
       "provider": "github",
       "owner": "Koen-Schockaert",
-      "repo": "electron-react-template",
+      "repo": "electron-react-boilerplate",
       "releaseType": "draft"
     }
   }
