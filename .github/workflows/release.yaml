@@ -15,33 +15,62 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-      # 1️⃣ Checkout repository
+      # Checkout code
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      # 2️⃣ Setup Node
+      # Node setup
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      # 3️⃣ Clean previous builds (cross-platform)
+      # Clean previous build
       - name: Clean previous build
         shell: bash
+        run: rm -rf release/build/* || true
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Compute next release version
+      - name: Compute next release version
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ -d "release/build" ]; then
-            rm -rf release/build/*
-          fi
+          NEXT_VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
+          echo "Next version: $NEXT_VERSION"
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
 
-      # 4️⃣ Install dependencies
-      - run: npm ci
+      # Build React app
+      - name: Build React app
+        run: npm run build
 
-      # 5️⃣ Build React + Electron
-      - run: npm run build
-      - run: npm run package
+      # Package Electron app with correct version
+      - name: Package Electron app
+        shell: bash
+        run: |
+          npm run package -- --config.extraMetadata.version=$NEXT_VERSION
 
-      # 6️⃣ Upload build artifacts
+      # Rename build files to match release tag
+      - name: Rename artifacts
+        shell: bash
+        run: |
+          for file in release/build/**/*.{exe,dmg,AppImage}; do
+            if [ -f "$file" ]; then
+              FILENAME=$(basename "$file")
+              DIRNAME=$(dirname "$file")
+              OS=$(echo "$FILENAME" | awk -F- '{print $(NF-1)}')
+              ARCH=$(echo "$FILENAME" | awk -F- '{print $NF}' | sed 's/\.[^.]*$//')
+              EXT="${FILENAME##*.}"
+              mv "$file" "$DIRNAME/ElectronReact-v$NEXT_VERSION-$OS-$ARCH.$EXT"
+            fi
+          done
+
+      # Upload artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
@@ -60,59 +89,21 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
       - run: npm ci
 
-      # Download artifacts into release/build
+      # Download build artifacts
       - uses: actions/download-artifact@v4
         with:
-          path: release/build
+          path: release/build/
 
-      # List files to verify
-      - name: List downloaded files
-        shell: bash
-        run: ls -R release/build
-
-      - name: Get next release version
-        id: get_version
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          NEXT_VERSION=$(npx semantic-release --dry-run --no-ci | grep "The next release version is" | awk '{print $NF}')
-          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-
-      # Rename files to match release version
-      - name: Rename build files to match release version
-        shell: bash
-        run: |
-          cd release/build
-          for file in *; do
-            if [[ -f "$file" ]]; then
-              EXT="${file##*.}"
-              OS=""
-              ARCH=""
-              case "$EXT" in
-                exe) OS="win"; ARCH="x64" ;;
-                dmg) OS="mac"; ARCH="x64" ;;
-                AppImage) OS="linux"; ARCH="x64" ;;
-              esac
-              mv "$file" "ElectronReact-v${{ env.NEXT_VERSION }}-$OS-$ARCH.$EXT"
-            fi
-          done
-
-      # List files after rename
-      - name: Verify renamed files
-        shell: bash
-        run: ls -R release/build
-
-      # Run semantic-release
+      # Create release with semantic-release
       - name: Release with semantic-release
-        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
-
