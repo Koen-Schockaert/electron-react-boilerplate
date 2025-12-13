@@ -1,3 +1,12 @@
+# [1.0.0-alpha.9](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2025-12-13)
+
+
+### Bug Fixes
+
+* mmlk ([0e95958](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/0e9595866cd15082657fbf39b04ff7df0c1348a1))
+* mmlp ([dcbd5ab](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/dcbd5ab5245fe0fadf539467bbebfe20f3df396e))
+* next ([1f0e610](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/1f0e6106cddb1c91f12de5c012015d561b626c93))
+
 # [1.0.0-alpha.8](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2025-12-13)
 
 
