@@ -67,6 +67,9 @@ jobs:
           NEXT_VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
           echo "Next release version: $NEXT_VERSION"
           
+          # Export so PowerShell can read it
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+
           if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "macOS" ]]; then
           # Linux/macOS: bash
           set -e
