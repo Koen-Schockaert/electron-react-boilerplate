@@ -41,37 +41,31 @@ jobs:
 
 
 
-          # Compute next release version
+      # Compute next release version
       - name: Compute next release version
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Run dry-run and save output
+          set -euo pipefail
+
+          # Run semantic-release dry-run once and save output
           npx semantic-release --dry-run --no-ci > release.log 2>&1 || true
 
-          # Extract version from log
-          NEXT_VERSION=$(grep "The next release version is" release.log | awk '{print $NF}')
-          echo "Next release version: $NEXT_VERSION"
+          # Extract the next release version
+          NEXT_VERSION=$(grep "The next release version is" release.log | awk '{print $NF}' || true)
 
-          # Fallback in case nothing is found
+          # Fallback if nothing found
           if [[ -z "$NEXT_VERSION" ]]; then
             echo "No next version detected; using fallback 0.0.0"
             NEXT_VERSION="0.0.0"
           fi
 
-          # Export for later steps
-          echo "NEXT_VERSION=\"$NEXT_VERSION\"" >> $GITHUB_ENV
-
-          # Run dry-run and save output
-          npx semantic-release --dry-run --no-ci > release.log 2>&1 || true
-
-          # Extract version from log
-          NEXT_VERSION=$(grep "The next release version is" release.log | awk '{print $NF}')
           echo "Next release version: $NEXT_VERSION"
 
           # Export for later steps
           echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+
 
       # Build React app
       - name: Build React app
