@@ -28,11 +28,12 @@ export default {
       }
     ],
     // Create GitHub release with build assets
-    ["@semantic-release/github", { assets: [
-      "release/build/**/*.exe",
-      "release/build/**/*.dmg",
-      "release/build/**/*.AppImage"
-      ]}
-    ]
+    ["@semantic-release/github", { 
+      assets: [
+        "release/build/*.exe",
+        "release/build/*.dmg",
+        "release/build/*.AppImage"
+      ]
+    }]
   ]
 };
