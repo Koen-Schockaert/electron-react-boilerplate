@@ -1,3 +1,11 @@
+# [1.0.0-alpha.8](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2025-12-13)
+
+
+### Bug Fixes
+
+* add perm ([6f0a4d8](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/6f0a4d848a5812f126d4817974324be6576dca4b))
+* again ([b8a7f80](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/b8a7f80588265372768b680efe0f5f2de2b58ddb))
+
 # [1.0.0-alpha.7](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2025-12-13)
 
 
