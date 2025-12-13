@@ -81,7 +81,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "mini-css-extract-plugin": "^2.9.2",
-    "prettier": "^3.5.3",
+    "prettier": "^3.7.4",
     "react-refresh": "^0.16.0",
     "react-test-renderer": "^19.0.0",
     "rimraf": "^6.0.1",
@@ -103,51 +103,67 @@
     "webpack-merge": "^6.0.1"
   },
   "build": {
-  "productName": "ElectronReact",
-  "appId": "org.erb.ElectronReact",
-  "asar": true,
-  "afterSign": ".erb/scripts/notarize.js",
-  "asarUnpack": "**\\*.{node,dll}",
-  "files": [
-    "**/*",
-    "dist",
-    "node_modules",
-    "package.json",
-    "!**/*.map"
-  ],
-  "extraMetadata": {
-    "main": "dist/main/main.js"
-  },
-  "mac": {
-    "target": ["dmg", "zip"],
-    "category": "public.app-category.productivity"
-  },
-  "dmg": {
-    "contents": [
-      { "x": 130, "y": 220 },
-      { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
-    ]
-  },
-  "win": {
-    "target": ["nsis"]
-  },
-  "linux": {
-    "target": ["AppImage"],
-    "category": "Development"
-  },
-  "directories": {
-    "app": "release/app",
-    "buildResources": "assets",
-    "output": "release/build"
-  },
-  "extraResources": ["./assets/**"],
-  "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
-  "publish": {
-    "provider": "github",
-    "owner": "Koen-Schockaert",
-    "repo": "electron-react-template",
-    "releaseType": "draft"
+    "productName": "ElectronReact",
+    "appId": "org.erb.ElectronReact",
+    "asar": true,
+    "afterSign": ".erb/scripts/notarize.js",
+    "asarUnpack": "**\\*.{node,dll}",
+    "files": [
+      "**/*",
+      "dist",
+      "node_modules",
+      "package.json",
+      "!**/*.map"
+    ],
+    "extraMetadata": {
+      "main": "dist/main/main.js"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.productivity"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Development"
+    },
+    "directories": {
+      "app": "release/app",
+      "buildResources": "assets",
+      "output": "release/build"
+    },
+    "extraResources": [
+      "./assets/**"
+    ],
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "publish": {
+      "provider": "github",
+      "owner": "Koen-Schockaert",
+      "repo": "electron-react-template",
+      "releaseType": "draft"
+    }
   }
 }
-}
-

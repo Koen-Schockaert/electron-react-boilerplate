@@ -38,6 +38,7 @@ jobs:
       # Run semantic-release in dry-run mode to compute next version
       - name: Compute next version
         id: semver
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
