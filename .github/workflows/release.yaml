@@ -3,16 +3,9 @@ name: Release
 on:
   push:
     branches:
-      #- main
       - alpha
       - beta
-
-permissions:
-  contents: write
-  packages: write
-
-env:
-  NODE_VERSION: 20
+      - main
 
 jobs:
   build:
@@ -22,52 +15,34 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
+      # 1️⃣ Checkout code
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      # 2️⃣ Setup Node
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 20
           cache: npm
 
-      # Install dependencies
-      - name: Install dependencies
-        run: npm ci
-
-      # Run semantic-release in dry-run mode to compute next version
-      - name: Compute next version
-        id: semver
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          NEXT_VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
-          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-          echo "Next version: $NEXT_VERSION"
-
-      # Clean previous build
+      # 3️⃣ Clean previous builds
       - name: Clean previous build
-        shell: bash
-        run: rm -rf release/build/* || true
-
-      # Build React app
-      - name: Build React app
-        run: npm run build
-
-      # Package Electron app with versioned filenames
-      - name: Package Electron app
         run: |
-          npm run package -- --config.extraMetadata.version=${{ env.NEXT_VERSION }}
+          rm -rf release/build/* || true
 
-      # Upload only installers
+      # 4️⃣ Install dependencies
+      - run: npm ci
+
+      # 5️⃣ Build React + Electron
+      - run: npm run build
+      - run: npm run package
+
+      # 6️⃣ Upload artifacts for release job
       - uses: actions/upload-artifact@v4
         with:
-          name: installers-${{ matrix.os }}
-          path: |
-            release/build/*.exe
-            release/build/*.dmg
-            release/build/*.AppImage
+          name: build-${{ matrix.os }}
+          path: release/build/**
 
   release:
     needs: build
@@ -76,23 +51,26 @@ jobs:
       contents: write
       packages: write
     steps:
+      # 1️⃣ Checkout code
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      # 2️⃣ Setup Node
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 20
           cache: npm
 
+      # 3️⃣ Install dependencies
       - run: npm ci
 
-      # Download artifacts
+      # 4️⃣ Download all OS artifacts into the common folder
       - uses: actions/download-artifact@v4
         with:
           path: release/build/
 
-      # Final release with semantic-release
+      # 5️⃣ Run semantic-release
       - name: Release with semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
