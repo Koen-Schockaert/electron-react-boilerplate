@@ -1,3 +1,10 @@
+# [1.0.0-alpha.3](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2025-12-13)
+
+
+### Bug Fixes
+
+* artefacts - only include os files ([30a7e3d](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/30a7e3da12cbdff1cc844527938e1c2b4bffafa1))
+
 # [1.0.0-alpha.2](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2025-12-13)
 
 
