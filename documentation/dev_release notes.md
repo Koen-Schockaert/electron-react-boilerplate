@@ -186,6 +186,3 @@ Conventional Commits Specification
 
 This README should clarify how you should work locally during development, push changes for a release, and how the CI/CD pipeline works using semantic-release and GitHub Actions to automate versioning, building, and releasing your Electron app.
 
-npm error code ETARGET
-npm error notarget No matching version found for electron-rebuild@^3.7.1.
-npm error notarget In most cases you or one of your dependencies are requesting
