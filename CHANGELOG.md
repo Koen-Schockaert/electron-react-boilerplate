@@ -1,3 +1,11 @@
+# [1.0.0-alpha.5](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2025-12-13)
+
+
+### Bug Fixes
+
+* add bash ([ed59e9f](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/ed59e9f7874c7457b73d0f476ed076d078432f84))
+* change file names ([913a42b](https://github.com/Koen-Schockaert/electron-react-boilerplate/commit/913a42bf05ed2c72495e4698a12dccfe1a786455))
+
 # [1.0.0-alpha.4](https://github.com/Koen-Schockaert/electron-react-boilerplate/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2025-12-13)
 
 
