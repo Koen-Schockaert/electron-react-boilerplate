@@ -103,49 +103,51 @@
     "webpack-merge": "^6.0.1"
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
-    "asar": true,
-    "afterSign": ".erb/scripts/notarize.js",
-    "asarUnpack": "**\\*.{node,dll}",
-    "files": [
-      "**/*",
-      "dist",
-      "node_modules",
-      "package.json",
-      "!**/*.map"
-    ],
-    "extraMetadata": {
-      "main": "dist/main/main.js"
-    },
-    "mac": {
-      "target": [
-        "dmg"
-      ],
-      "category": "public.app-category.productivity"
-    },
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "category": "Development"
-    },
-    "directories": {
-      "app": "release/app",
-      "buildResources": "assets",
-      "output": "release/build"
-    },
-    "extraResources": [
-      "./assets/**"
+  "productName": "ElectronReact",
+  "appId": "org.erb.ElectronReact",
+  "asar": true,
+  "afterSign": ".erb/scripts/notarize.js",
+  "asarUnpack": "**\\*.{node,dll}",
+  "files": [
+    "**/*",
+    "dist",
+    "node_modules",
+    "package.json",
+    "!**/*.map"
+  ],
+  "extraMetadata": {
+    "main": "dist/main/main.js"
+  },
+  "mac": {
+    "target": ["dmg", "zip"],
+    "category": "public.app-category.productivity"
+  },
+  "dmg": {
+    "contents": [
+      { "x": 130, "y": 220 },
+      { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Koen-Schockaert/electron-react-boilerplate.git"
+  "win": {
+    "target": ["nsis"]
+  },
+  "linux": {
+    "target": ["AppImage"],
+    "category": "Development"
+  },
+  "directories": {
+    "app": "release/app",
+    "buildResources": "assets",
+    "output": "release/build"
+  },
+  "extraResources": ["./assets/**"],
+  "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+  "publish": {
+    "provider": "github",
+    "owner": "Koen-Schockaert",
+    "repo": "electron-react-template",
+    "releaseType": "draft"
   }
 }
+}
+

@@ -44,7 +44,6 @@ jobs:
             release/build/**/*.exe
             release/build/**/*.dmg
             release/build/**/*.AppImage
-          retention-days: 2
 
   release:
     needs: build
