@@ -76,13 +76,16 @@ jobs:
         shell: bash
         run: ls -R release/build
 
-      # Get next release version
       - name: Get next release version
-        id: next_version
-        shell: bash
+        id: get_version
+        shell: node
         run: |
-          VERSION=$(npx semantic-release --dry-run | grep "The next release version is" | awk '{print $NF}')
-          echo "NEXT_VERSION=$VERSION" >> $GITHUB_ENV
+          const { execSync } = require("child_process");
+          const output = execSync("npx semantic-release --dry-run --no-ci", { encoding: "utf-8" });
+          const match = output.match(/The next release version is (\S+)/);
+          if (!match) throw new Error("Cannot determine next version");
+          console.log(`NEXT_VERSION=${match[1]}`);
+          process.stdout.write(`NEXT_VERSION=${match[1]}\n`);
 
       # Rename files to match release version
       - name: Rename build files to match release version
