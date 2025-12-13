@@ -3,9 +3,9 @@ name: Release
 on:
   push:
     branches:
-      - alpha
-      - beta
-      - main
+      #- alpha
+      #- beta
+      #- main
 
 jobs:
   build:
